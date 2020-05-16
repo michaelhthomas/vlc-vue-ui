@@ -35,6 +35,7 @@
             v-else
             :key="i"
             link
+            :to="item.to"
           >
             <v-list-item-action>
               <v-icon>{{ item.icon }}</v-icon>
@@ -55,27 +56,6 @@
         class="fill-height"
         :style="{background: $vuetify.theme.themes[theme].background}"
       >
-        <!-- <v-row
-          justify="center"
-          align="center"
-        >
-          <v-col class="shrink">
-            <v-tooltip right>
-              <template v-slot:activator="{ on }">
-                <v-btn
-                  :href="source"
-                  icon
-                  large
-                  target="_blank"
-                  v-on="on"
-                >
-                  <v-icon large>mdi-code-tags</v-icon>
-                </v-btn>
-              </template>
-              <span>Source</span>
-            </v-tooltip>
-          </v-col>
-        </v-row> -->
         <router-view />
       </v-container>
     </v-content>
@@ -90,8 +70,8 @@
     data: () => ({
       drawer: null,
       items: [
-        { icon: 'mdi-play-box-multiple', text: 'Player' },
-        { icon: 'mdi-folder-multiple', text: 'Browse' },
+        { icon: 'mdi-play-box-multiple', text: 'Player', to: '/' },
+        { icon: 'mdi-folder-multiple', text: 'Browse', to: '/browse' },
         { divider: true },
         { icon: 'mdi-video-wireless', text: 'Manage Streams' },
         { icon: 'mdi-audio-video', text: 'A/V Controls' },
@@ -99,7 +79,7 @@
         { icon: 'mdi-cog', text: 'Settings' },
         { icon: 'mdi-script-text', text: 'Send VLM Commands' },
         { icon: 'mdi-keyboard', text: 'Keyboard shortcuts' },
-        { icon: 'mdi-information', text: 'About' },
+        { icon: 'mdi-information', text: 'About', to: '/about' },
       ],
     }),
     computed: {

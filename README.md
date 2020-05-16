@@ -1,5 +1,9 @@
 # vlc-vue-ui
 
+*Early Alpha*
+
+Modern Web UI for VLC Media Player built with Vue.js and Vuetify.
+
 ## Project setup
 ```
 yarn install
@@ -24,6 +28,3 @@ yarn run test
 ```
 yarn run lint
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
