@@ -3,30 +3,26 @@
     <v-app-bar
       app
       clipped-left
-      color="orange darken-1"
+      color="primary"
+      light
     >
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
       <span class="title ml-3 mr-5">VLC&nbsp;<span class="font-weight-light">Media Player</span></span>
-      <v-text-field
-        solo-inverted
-        flat
-        hide-details
-        label="Search"
-        prepend-inner-icon="mdi-magnify"
-      ></v-text-field>
-
       <v-spacer></v-spacer>
+
+      <v-btn icon v-on:click="$vuetify.theme.dark = !$vuetify.theme.dark">
+        <v-icon>mdi-theme-light-dark</v-icon>
+      </v-btn>
     </v-app-bar>
 
     <v-navigation-drawer
       v-model="drawer"
       app
       clipped
-      color="grey lighten-4"
+      :color="$vuetify.theme.themes[theme].background"
     >
       <v-list
         dense
-        class="grey lighten-4"
       >
         <template v-for="(item, i) in items">
           <v-divider
@@ -56,7 +52,8 @@
     <v-content>
       <v-container
         fluid
-        class="grey lighten-4 fill-height"
+        class="fill-height"
+        :style="{background: $vuetify.theme.themes[theme].background}"
       >
         <!-- <v-row
           justify="center"
@@ -101,10 +98,15 @@
         { divider: true },
         { icon: 'mdi-cog', text: 'Settings' },
         { icon: 'mdi-script-text', text: 'Send VLM Commands' },
-        { icon: 'mdi-help', text: 'Help' },
         { icon: 'mdi-keyboard', text: 'Keyboard shortcuts' },
+        { icon: 'mdi-information', text: 'About' },
       ],
     }),
+    computed: {
+      theme(){
+        return (this.$vuetify.theme.dark) ? 'dark' : 'light'
+      }
+    }
   }
 </script>
 
