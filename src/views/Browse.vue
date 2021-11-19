@@ -53,6 +53,7 @@
 
 <script>
   export default {
+    name: 'Browse',
     data: () => ({
       uri: 'file://~',
       files: {
