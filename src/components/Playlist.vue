@@ -1,151 +1,78 @@
 <template>
-  <v-container>
-    <v-row class="text-center">
-      <v-col cols="12">
-        <v-img
-          :src="require('../assets/logo.svg')"
-          class="my-3"
-          contain
-          height="200"
-        />
-      </v-col>
-
-      <v-col class="mb-4">
-        <h1 class="display-2 font-weight-bold mb-3">
-          Welcome to Vuetify
-        </h1>
-
-        <p class="subheading font-weight-regular">
-          For help and collaboration with other Vuetify developers,
-          <br>please join our online
-          <a
-            href="https://community.vuetifyjs.com"
-            target="_blank"
-          >Discord Community</a>
-        </p>
-      </v-col>
-
-      <v-col
-        class="mb-5"
-        cols="12"
-      >
-        <h2 class="headline font-weight-bold mb-3">
-          What's next?
-        </h2>
-
-        <v-row justify="center">
-          <a
-            v-for="(next, i) in whatsNext"
-            :key="i"
-            :href="next.href"
-            class="subheading mx-3"
-            target="_blank"
-          >
-            {{ next.text }}
-          </a>
-        </v-row>
-      </v-col>
-
-      <v-col
-        class="mb-5"
-        cols="12"
-      >
-        <h2 class="headline font-weight-bold mb-3">
-          Important Links
-        </h2>
-
-        <v-row justify="center">
-          <a
-            v-for="(link, i) in importantLinks"
-            :key="i"
-            :href="link.href"
-            class="subheading mx-3"
-            target="_blank"
-          >
-            {{ link.text }}
-          </a>
-        </v-row>
-      </v-col>
-
-      <v-col
-        class="mb-5"
-        cols="12"
-      >
-        <h2 class="headline font-weight-bold mb-3">
-          Ecosystem
-        </h2>
-
-        <v-row justify="center">
-          <a
-            v-for="(eco, i) in ecosystem"
-            :key="i"
-            :href="eco.href"
-            class="subheading mx-3"
-            target="_blank"
-          >
-            {{ eco.text }}
-          </a>
-        </v-row>
-      </v-col>
-    </v-row>
-  </v-container>
+  <v-treeview 
+    open-all
+    :items="playlist.data.children"
+    :active=activeList
+  >
+    <template v-slot:prepend="{ item, open }">
+      <v-icon v-if="item.type == 'node'">
+        {{ open ? 'mdi-folder-open' : 'mdi-folder' }}
+      </v-icon>
+      <v-icon v-else>
+        mdi-filmstrip-box
+      </v-icon>
+    </template>
+    <template v-slot:label="{ item }">
+      <a v-if="item.type == 'leaf'" @click="activate(item.id)">{{ item.name }}</a>
+      <span v-else>{{ item.name }}</span>
+    </template>
+  </v-treeview>
 </template>
 
 <script>
-  export default {
-    name: 'HelloWorld',
+import statusService from '@/services/status';
+import playlistService from '@/services/playlist';
 
+  export default {
+    name: 'Playlist',
+    props: [
+      'active'
+    ],
     data: () => ({
-      ecosystem: [
-        {
-          text: 'vuetify-loader',
-          href: 'https://github.com/vuetifyjs/vuetify-loader',
-        },
-        {
-          text: 'github',
-          href: 'https://github.com/vuetifyjs/vuetify',
-        },
-        {
-          text: 'awesome-vuetify',
-          href: 'https://github.com/vuetifyjs/awesome-vuetify',
-        },
-      ],
-      importantLinks: [
-        {
-          text: 'Documentation',
-          href: 'https://vuetifyjs.com',
-        },
-        {
-          text: 'Chat',
-          href: 'https://community.vuetifyjs.com',
-        },
-        {
-          text: 'Made with Vuetify',
-          href: 'https://madewithvuejs.com/vuetify',
-        },
-        {
-          text: 'Twitter',
-          href: 'https://twitter.com/vuetifyjs',
-        },
-        {
-          text: 'Articles',
-          href: 'https://medium.com/vuetify',
-        },
-      ],
-      whatsNext: [
-        {
-          text: 'Explore components',
-          href: 'https://vuetifyjs.com/components/api-explorer',
-        },
-        {
-          text: 'Select a layout',
-          href: 'https://vuetifyjs.com/layout/pre-defined',
-        },
-        {
-          text: 'Frequently Asked Questions',
-          href: 'https://vuetifyjs.com/getting-started/frequently-asked-questions',
-        },
-      ],
+      playlist: { data: [] }
     }),
+    computed: {
+      // Find the active item in the playlist by looping recursively to find the item with the "current" attribute
+      // TODO: Propose a solution where this isn't necessary, it is incredibly dumb and inefficient
+      activeList: function () {
+        let filterResult = this.recursiveFilter(this.playlist.data, e => e.current == 'current')
+        if (filterResult.length > 0) {
+          return [ filterResult[0].id ];
+        } else {
+          return [];
+        }
+      }
+    },
+    async created() {
+      this.playlist = await playlistService.get();
+    },
+    methods: {
+      recursiveFilter(node, filter) {
+        var result = [];
+        if (node.children) {
+          if (node.children.filter(filter).length > 0) {
+            return node.children.filter(filter);
+          } else {
+            // Use for loop as JS foreach causes function nesting and other nasties
+            for (var i = 0; i < node.children.length; i++) {
+              let child = node.children[i];
+
+              result = this.recursiveFilter(child, filter);
+
+              if (result.length > 0) {
+                return result;
+              }
+            }
+          }
+        }
+        return result;
+      },
+      activate(id) {
+        statusService.sendRequest({
+          'command': 'pl_play',
+          'id': id
+        })
+      }
+    }
   }
 </script>
