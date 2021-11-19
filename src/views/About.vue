@@ -21,18 +21,32 @@
         />
       </v-row>
       <v-card-title>
-        VLC Media Player - Web Interface
+        VLC Media Player - Material Web Interface
       </v-card-title>
       <v-card-subtitle>
-        3.0.10 Vetinari
+        Version {{ appVersion }}
       </v-card-subtitle>
       <v-card-text>
-        Developed using the following technologies...a;sldkfja;slkdfja;slkdfja;slkdjf;alskdfj;alskjf
+        <h4>Contributors</h4>
+        Michael Thomas
       </v-card-text>
       <v-card-actions>
-        <v-btn>View source</v-btn>
+        <v-btn href="//github.com/michaelhthomas/vlc-vue-ui">View source</v-btn>
       </v-card-actions>
     </v-card>
   </v-col>
   </v-row>
 </template>
+
+<script>
+import { version } from '../../package.json'
+
+export default {
+  name: 'About',
+  data() {
+    return {
+      appVersion: version
+    }
+  }
+}
+</script>
