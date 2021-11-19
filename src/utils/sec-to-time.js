@@ -9,7 +9,7 @@ export default function secToTime(timeInSeconds) {
 
   if (hours > 0) {
     return pad(hours, 2) + ':' + pad(minutes, 2) + ':' + pad(seconds, 2);
-  }else {
+  } else {
     return pad(minutes, 2) + ':' + pad(seconds, 2);
   }
 }
