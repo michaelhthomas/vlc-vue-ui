@@ -11,25 +11,21 @@
         <h1 class="mb-4">
           Send VLM Commands
         </h1>
-        <v-alert
-          outlined
-        >
-          <div class="text-h6">
-            About VLM
-          </div>
-          <div>
-            <b>VideoLAN Manager</b> (VLM) is a small media manager designed to control multiple streams with <em>only one instance of VLC</em>. It allows multiple streaming and video on demand (VoD).
-            <a href="https://wiki.videolan.org/Documentation:Streaming_HowTo/VLM/">Learn More</a>
-          </div>
-        </v-alert>
+        <h4 class="text-h6">
+          About VLM
+        </h4>
+        <p>
+          <b>VideoLAN Manager</b> (VLM) is a small media manager designed to control multiple streams with <em>only one instance of VLC</em>. It allows multiple streaming and video on demand (VoD).
+          <a href="https://wiki.videolan.org/Documentation:Streaming_HowTo/VLM/">Learn More</a>
+        </p>
         <v-form ref="form">
           <v-textarea
             name="commands"
+            v-model.lazy="commands"
             auto-grow
             autofocus
             outlined
             label="VLM Batch Commands"
-            :value="decodeURIComponent('#paste your VLM commands here\n#separate commands with a new line or a semi-colon:\n\n')"
           ></v-textarea>
           <v-btn
             color="primary"
@@ -50,9 +46,14 @@ const VLMEndpoint = `${server}/requests/vlm_cmd.xml`
 
 export default {
   name: 'VLMCommands',
+  data() {
+    return {
+      commands: decodeURIComponent('#paste your VLM commands here\n#separate commands with a new line or a semi-colon:\n\n'),
+    }
+  },
   methods: {
     submit () {
-      const commands = this.$refs.form.commands.split("\n");
+      const commands = this.commands.split("\n");
       for (let command of commands) {
         command = command.trim();
         if (command.length > 0 && command.charAt(0) !== "#") {
