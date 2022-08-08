@@ -26,6 +26,20 @@
             dark
             class="my-4"
           ></v-divider>
+          <v-list-item
+            v-else-if="item.action"
+            :key="i"
+            @click.stop="invokeAction(item.action)"
+          >
+            <v-list-item-action>
+              <v-icon>{{ item.icon }}</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title class="grey--text">
+                {{ item.text }}
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
           <v-list-item v-else :key="i" link :to="item.to">
             <v-list-item-action>
               <v-icon>{{ item.icon }}</v-icon>
@@ -49,13 +63,17 @@
         <router-view />
       </v-container>
     </v-content>
+
+    <KeyboardShortcuts ref="keyboardShortcuts" />
   </v-app>
 </template>
 
 <script>
 import localConfig from "@/services/local-config";
+import KeyboardShortcuts from "./components/KeyboardShortcuts.vue";
 
 export default {
+  components: { KeyboardShortcuts },
   props: {
     source: String,
   },
@@ -74,7 +92,11 @@ export default {
         text: "Send VLM Commands",
         to: "/vlm-command",
       },
-      { icon: "mdi-keyboard", text: "Keyboard shortcuts" },
+      {
+        icon: "mdi-keyboard",
+        text: "Keyboard shortcuts",
+        action: "openKeyboardShortcuts",
+      },
       { icon: "mdi-information", text: "About", to: "/about" },
     ],
     config: localConfig.getConfig(),
@@ -95,12 +117,12 @@ export default {
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
       localConfig.saveConfig(this.config);
     },
+    invokeAction(fn) {
+      return this[fn]();
+    },
+    openKeyboardShortcuts: function () {
+      this.$refs.keyboardShortcuts.open();
+    },
   },
 };
 </script>
-
-<style>
-/* .v-navigation-drawer__border {
-  display: none
-} */
-</style>

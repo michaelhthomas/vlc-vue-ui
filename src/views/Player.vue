@@ -25,28 +25,54 @@
           </template>
         </v-slider>
         <div class="text-center mb-8">
-          <v-btn class="mx-2" icon @click="status.stop">
+          <v-btn
+            v-shortkey="['s']"
+            class="mx-2"
+            icon
+            @shortkey="status.stop"
+            @click="status.stop"
+          >
             <v-icon>mdi-stop</v-icon>
           </v-btn>
           <v-chip x-large outlined>
-            <v-btn class="mx-2" icon @click="status.prev">
+            <v-btn
+              v-shortkey="['b']"
+              class="mx-2"
+              icon
+              @shortkey="status.prev"
+              @click="status.prev"
+            >
               <v-icon>mdi-skip-previous</v-icon>
             </v-btn>
             <v-btn
+              v-shortkey="['space']"
               class="mx-2"
               fab
               dark
               color="primary"
+              @shortkey="status.playPause"
               @click="status.playPause"
             >
               <v-icon v-if="status.state == 'playing'" dark>mdi-pause</v-icon>
               <v-icon v-else dark>mdi-play</v-icon>
             </v-btn>
-            <v-btn class="mx-2" icon @click="status.next">
+            <v-btn
+              v-shortkey="['n']"
+              class="mx-2"
+              icon
+              @shortkey="status.next"
+              @click="status.next"
+            >
               <v-icon>mdi-skip-next</v-icon>
             </v-btn>
           </v-chip>
-          <v-btn class="mx-2" icon @click="status.toggleFullscreen">
+          <v-btn
+            v-shortkey="['f']"
+            class="mx-2"
+            icon
+            @shortkey="status.toggleFullscreen"
+            @click="status.toggleFullscreen"
+          >
             <v-icon>mdi-fullscreen</v-icon>
           </v-btn>
         </div>
