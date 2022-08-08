@@ -8,9 +8,12 @@
           <b>VideoLAN Manager</b> (VLM) is a small media manager designed to
           control multiple streams with <em>only one instance of VLC</em>. It
           allows multiple streaming and video on demand (VoD).
-          <a href="https://wiki.videolan.org/Documentation:Streaming_HowTo/VLM/"
-            >Learn More</a
+          <a
+            target="_blank"
+            href="https://wiki.videolan.org/Documentation:Streaming_HowTo/VLM/"
           >
+            Learn More
+          </a>
         </p>
         <v-form ref="form">
           <v-textarea
