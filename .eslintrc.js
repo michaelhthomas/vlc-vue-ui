@@ -1,4 +1,8 @@
 module.exports = {
+  parser: "vue-eslint-parser",
+  parserOptions: {
+    parser: "@typescript-eslint/parser",
+  },
   env: {
     node: true,
   },
@@ -7,5 +11,5 @@ module.exports = {
     "prettier/prettier": "error",
     "vue/multi-word-component-names": "off",
   },
-  plugins: ["prettier"],
+  plugins: ["@typescript-eslint", "prettier"],
 };

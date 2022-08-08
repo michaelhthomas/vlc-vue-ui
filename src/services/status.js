@@ -6,6 +6,7 @@ const statusEndpoint = `${server}/requests/status.json`;
 
 export default {
   get: () => api({ endpoint: statusEndpoint, interval: 500 }),
+  getOnce: () => api({ endpoint: statusEndpoint }),
   sendCommand: (command) => quickFetch(statusEndpoint, { command: command }),
   sendRequest: (params) => quickFetch(statusEndpoint, params),
 };
