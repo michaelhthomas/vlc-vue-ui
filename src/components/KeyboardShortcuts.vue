@@ -72,7 +72,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .v-data-table__wrapper > table > tbody > tr:hover {
   background: inherit !important;
 }
