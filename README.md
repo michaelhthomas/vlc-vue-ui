@@ -1,8 +1,14 @@
-# vlc-vue-ui
+<div align="center">
+
+<img src="./src/assets/logo.svg" width="128" />
+
+# VLC Vue UI
+
+</div>
 
 *Early Alpha*
 
-Modern Web UI for VLC Media Player built with Vue.js and Vuetify.
+A modern web interface for VLC Media Player built with Vue.js and Vuetify.
 
 ## Install
 
