@@ -58,7 +58,9 @@
                   </v-icon>
                 </td>
                 <td class="td-truncate">{{ item.name }}</td>
-                <td class="d-none d-sm-table-cell">{{ item.type == "file" ? getFileExt(item.name) : "" }}</td>
+                <td class="d-none d-sm-table-cell">
+                  {{ item.type == "file" ? getFileExt(item.name) : "" }}
+                </td>
                 <td>
                   <div
                     v-if="item.type == 'file'"
