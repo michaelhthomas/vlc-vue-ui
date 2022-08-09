@@ -1,62 +1,67 @@
 import quickFetch from "../utils/quick-fetch";
 import statusService from "./status";
 
-const server = window.location.origin;
-const browseEndpoint = `${server}/requests/browse.json`;
+export default class BrowseService {
+  private static server = window.location.origin;
+  private static browseEndpoint = `${this.server}/requests/browse.json`;
 
-const get = (uri: string) => quickFetch(browseEndpoint, { uri });
+  private static _homeFolder: string;
 
-let homeFolder: string = (await get("file://~")).element[0].path;
-homeFolder = homeFolder.substr(0, homeFolder.lastIndexOf("/"));
+  private static get homeFolder() {
+    return (async () => {
+      if (this._homeFolder) return this._homeFolder;
 
-const getPath = (uri: string) => {
-  uri = decodeURI(uri);
+      this._homeFolder = await this.getHomeFolder();
+      return this._homeFolder;
+    })();
+  }
 
-  const root = !uri.includes(homeFolder) && !uri.includes("~");
+  private static async getHomeFolder() {
+    let homeFolder = (await this.get("file://~")).element[0].path;
+    return homeFolder.substr(0, homeFolder.lastIndexOf("/"));
+  }
 
-  const folders = uri
-    .replace("file://", "")
-    .replace(homeFolder, "")
-    .replace("~", "")
-    .split("/")
-    .filter((n) => n);
+  private static async getPath(uri: string) {
+    uri = decodeURI(uri);
+    const homeFolder = await this.homeFolder;
 
-  const folderObjs = folders.map((name, index) => {
-    let uri = root ? "file://" : `file://${homeFolder}`;
-    for (let i = 0; i <= index; i++) {
-      uri += "/" + folders[i];
-    }
+    const root = !uri.includes(homeFolder) && !uri.includes("~");
+
+    const folders = uri
+      .replace("file://", "")
+      .replace(homeFolder, "")
+      .replace("~", "")
+      .split("/")
+      .filter((n) => n);
+
+    const folderObjs = folders.map((name, index) => {
+      let uri = root ? "file://" : `file://${homeFolder}`;
+      for (let i = 0; i <= index; i++) {
+        uri += "/" + folders[i];
+      }
+      return {
+        name,
+        uri,
+      };
+    });
+
     return {
-      name,
-      uri,
+      root,
+      folders: folderObjs,
     };
-  });
+  }
 
-  return {
-    root,
-    folders: folderObjs,
+  static get = (uri: string) => quickFetch(this.browseEndpoint, { uri });
+  static list = async (uri: string) => {
+    const files = await this.get(uri);
+    const path = await this.getPath(uri);
+    return {
+      path,
+      files: files.element,
+    };
   };
-};
-
-const list = async (uri: string) => {
-  const files = await get(uri);
-  const path = getPath(uri);
-
-  return {
-    path,
-    files: files.element,
-  };
-};
-
-const play = (uri: string) =>
-  statusService.sendRequest({ command: "in_play", input: uri });
-
-const enqueue = (uri: string) =>
-  statusService.sendRequest({ command: "in_enqueue", input: uri });
-
-export default {
-  get,
-  list,
-  play,
-  enqueue,
-};
+  static play = (uri: string) =>
+    statusService.sendRequest({ command: "in_play", input: uri });
+  static enqueue = (uri: string) =>
+    statusService.sendRequest({ command: "in_enqueue", input: uri });
+}
